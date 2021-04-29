@@ -1,3 +1,3 @@
-require("prototypes.entity.pollution-combinator")
-require("prototypes.item.pollution-combinator")
-require("prototypes.recipe.pollution-combinator")
+require("prototypes.entity")
+require("prototypes.item")
+require("prototypes.recipe")

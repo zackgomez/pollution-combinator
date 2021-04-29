@@ -4,15 +4,22 @@ local data = {
 
 local function on_init()
   global = data
+
+  for _, surface in pairs(game.surfaces) do
+		for _, entity in pairs(surface.find_entities_filtered{name="pollution-combinator"}) do
+      register_pollution_combinator(entity)
+		end
+  end
 end
 
 local function on_load()
   data = global
-  -- for _, surface in pairs(game.surfaces) do
-	-- 	for _, entity in pairs(surface.find_entities_filtered{name="pollution-combinator"}) do
-  --     register_pollution_combinator(entity)
-	-- 	end
-  -- end
+end
+
+local function on_config_changed(data)
+  if data.mod_changes and data.mod_changes["pollution-combinator"] then
+    on_init()
+  end
 end
 
 local function register_pollution_combinator(entity)
@@ -66,6 +73,7 @@ local filters = {{filter="name", name="pollution-combinator"}}
 
 script.on_init(on_init)
 script.on_load(on_load)
+script.on_configuration_changed(on_config_changed)
 script.on_event(defines.events.on_tick, on_tick)
 script.on_event(defines.events.on_built_entity, on_built_entity, filters)
 script.on_event(defines.events.on_robot_built_entity, on_built_entity, filters)
