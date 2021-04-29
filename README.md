@@ -1,0 +1,1 @@
+Factorio mod that introduced a combinator outputting the pollution of the chunk it is placed in
