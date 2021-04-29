@@ -1,0 +1,13 @@
+== functionality
+
+better icon
+
+virtual signal for output
+
+localized descriptions
+
+
+== tech
+
+* use a prefix to avoid collisions
+* implement on_config_changed full refresh

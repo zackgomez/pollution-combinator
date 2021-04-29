@@ -51,6 +51,7 @@ local function on_built_entity(event)
   local entity = event.created_entity
   if entity.name == "pollution-combinator" then
     register_pollution_combinator(entity)
+    entity.operable = false
   end
 end
 
