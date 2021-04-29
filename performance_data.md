@@ -42,3 +42,9 @@
 .20 no surface short circuit
 
 reran short circuit/no short circuit a couple of times- no real difference -- take these numbers with a grain of salt or a bit of leeway
+
+
+== comparison to useful combinators pollution combinator
+
+.95 ish for 100 useful combinators pollution combinator
+compare to .20 for my combinator
