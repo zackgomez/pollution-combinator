@@ -1,26 +1,48 @@
 local data = {
-  entities = {}
+  entries = {}
 }
 
 local function on_init()
-  global.pollution_combinator_data = data
+  global = data
 end
 
 local function on_load()
-  data = global.pollution_combinator_data or data
+  data = global
+  -- for _, surface in pairs(game.surfaces) do
+	-- 	for _, entity in pairs(surface.find_entities_filtered{name="pollution-combinator"}) do
+  --     register_pollution_combinator(entity)
+	-- 	end
+  -- end
+end
+
+local function register_pollution_combinator(entity)
+  data.entries[entity.unit_number] = {
+    entity = entity,
+    control = entity.get_or_create_control_behavior(),
+    position = entity.position,
+    surface = entity.surface,
+  }
+end
+
+local function unregister_pollution_combinator(entity)
+  data.entries[entity.unit_number] = nil
 end
 
 local function on_tick(event)
-  for _, entity in pairs(data.entities) do
-    if entity.valid then
-      local control = entity.get_or_create_control_behavior()
-      control.set_signal(1, {
-        signal = {
-          type = "virtual",
-          name = "signal-dot"
-        },
-        count = 1
-      })
+  local signal = {
+    signal = {
+      type = "virtual",
+      name = "signal-dot"
+    },
+    count = 1
+  }
+  for _, entry in pairs(data.entries) do
+    local control = entry.control
+    if control.valid then
+      local surface = entry.surface
+      local position = entry.position
+      signal.count = surface.get_pollution(position)
+      control.set_signal(1, signal)
     end
   end
 end
@@ -28,14 +50,14 @@ end
 local function on_built_entity(event)
   local entity = event.created_entity
   if entity.name == "pollution-combinator" then
-    data.entities[entity.unit_number] = entity
+    register_pollution_combinator(entity)
   end
 end
 
 local function on_pre_entity_removed(event)
   local entity = event.entity
   if entity.name == "pollution-combinator" then
-    data.entities[entity.unit_number] = nil
+    unregister_pollution_combinator(entity)
   end
 end
 
