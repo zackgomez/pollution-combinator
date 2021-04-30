@@ -13,6 +13,10 @@ local function on_init()
 		end
   end
 
+  for _, force in pairs(game.forces) do
+    force.recipes[PC_RECIPE_NAME].enabled = force.technologies["circuit-network"].researched
+  end
+
 end
 
 local function on_load()
