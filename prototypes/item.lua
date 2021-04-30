@@ -14,11 +14,12 @@ data:extend{
         icon = "__pollution-combinator__/graphics/icons/pollution-signal.png",
         icon_size = 32,
         tint = POLLUTION_SIGNAL_TINT,
+        scale = 0.7,
       },
     },
     subgroup = "circuit-network",
     place_result = PC_ENTITY_NAME,
-    order = "b[combinators]-d[pollution-combinator]",
+    order = "c[combinators]-d[pollution-combinator]",
     stack_size = 50,
   },
 }
