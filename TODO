@@ -1,15 +1,7 @@
 == functionality
 
-better icon
-
-virtual signal for output
-
-localized descriptions
-
 enable on adding to game with circuit network already unlocked
-
 
 == tech
 
 * use a prefix to avoid collisions
-* implement on_config_changed full refresh
