@@ -1,6 +1,8 @@
-PC_ENTITY_NAME = 'pollution-combinator'
-PC_ITEM_NAME = 'pollution-combinator'
-PC_RECIPE_NAME = 'pollution-combinator'
+local MOD_PREFIX = 'pc:'
+
+PC_ENTITY_NAME = MOD_PREFIX .. 'pollution-combinator'
+PC_ITEM_NAME = MOD_PREFIX .. 'pollution-combinator'
+PC_RECIPE_NAME = MOD_PREFIX .. 'pollution-combinator'
 POLLUTION_SIGNAL_NAME = 'pollution-signal'
 
 
