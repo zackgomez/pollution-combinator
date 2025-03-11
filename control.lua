@@ -1,11 +1,22 @@
 require('constants')
 
-local data = {
-  pcs = {}
-}
+local data
+
+local function register_pollution_combinator(entity)
+  data.pcs[entity.unit_number] = {
+    entity = entity,
+    control = entity.get_or_create_control_behavior(),
+    position = entity.position,
+    surface = entity.surface,
+  }
+end
 
 local function on_init()
-  global = data
+  data = {
+    pcs = {}
+  }
+
+  storage = data
 
   for _, surface in pairs(game.surfaces) do
 		for _, entity in pairs(surface.find_entities_filtered{ name=PC_ENTITY_NAME }) do
@@ -20,7 +31,7 @@ local function on_init()
 end
 
 local function on_load()
-  data = global
+  data = storage
 end
 
 local function on_config_changed(data)
@@ -29,40 +40,44 @@ local function on_config_changed(data)
   end
 end
 
-local function register_pollution_combinator(entity)
-  data.pcs[entity.unit_number] = {
-    entity = entity,
-    control = entity.get_or_create_control_behavior(),
-    position = entity.position,
-    surface = entity.surface,
-  }
-end
-
 local function unregister_pollution_combinator(entity)
   data.pcs[entity.unit_number] = nil
 end
 
 local function on_tick(event)
-  local signal = {
-    signal = {
-      type = "virtual",
-      name = POLLUTION_SIGNAL_NAME,
-    },
-    count = 1
-  }
+  local count = 1
   for _, entry in pairs(data.pcs) do
-    local control = entry.control
-    if control.valid then
-      local surface = entry.surface
-      local position = entry.position
-      signal.count = surface.get_pollution(position)
-      control.set_signal(1, signal)
+    if entry.entity and entry.entity.valid then
+      local control = entry.control
+      if control and control.valid and control.enabled then
+        local section = control.get_section(1);
+        if section and section.valid then
+          local surface = entry.surface
+          local position = entry.position
+          count = surface.get_pollution(position)
+          
+          -- control.set_signal(1, signal)
+          section.set_slot(1, {
+            value = {
+              comparator = "=",
+              quality = "normal",
+              type = "virtual",
+              name = POLLUTION_SIGNAL_NAME,
+            },
+            min = count,
+          })
+
+          for i=2, section.filters_count do
+            section.clear_slot(i)
+          end        
+        end
+      end
     end
   end
 end
 
 local function on_built_entity(event)
-  local entity = event.created_entity
+  local entity = event.created_entity or event.entity
   if entity.name == PC_ENTITY_NAME then
     register_pollution_combinator(entity)
     entity.operable = false
@@ -71,7 +86,7 @@ end
 
 local function on_pre_entity_removed(event)
   local entity = event.entity
-  if entity.name == PC_ENTITY_NAME then
+  if entity and entity.valid and entity.name == PC_ENTITY_NAME then
     unregister_pollution_combinator(entity)
   end
 end
