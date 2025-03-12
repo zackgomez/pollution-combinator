@@ -1,4 +1,4 @@
-local MOD_PREFIX = 'pc:'
+local MOD_PREFIX = 'pc_'
 
 PC_ENTITY_NAME = MOD_PREFIX .. 'pollution-combinator'
 PC_ITEM_NAME = MOD_PREFIX .. 'pollution-combinator'

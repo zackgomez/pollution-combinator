@@ -3,3 +3,5 @@
 entity appearance (tint or icon)
 
 == tech
+
+* use a prefix to avoid collisions
