@@ -19,15 +19,14 @@ local function on_init()
   storage = data
 
   for _, surface in pairs(game.surfaces) do
-		for _, entity in pairs(surface.find_entities_filtered{ name=PC_ENTITY_NAME }) do
+    for _, entity in pairs(surface.find_entities_filtered { name = PC_ENTITY_NAME }) do
       register_pollution_combinator(entity)
-		end
+    end
   end
 
   for _, force in pairs(game.forces) do
     force.recipes[PC_RECIPE_NAME].enabled = force.technologies["circuit-network"].researched
   end
-
 end
 
 local function on_load()
@@ -45,7 +44,10 @@ local function unregister_pollution_combinator(entity)
 end
 
 local function on_tick(event)
-  local count = 1
+  local slot_data = {
+    value = POLLUTION_SIGNAL_NAME,
+    min = 0,
+  }
   for _, entry in pairs(data.pcs) do
     if entry.entity and entry.entity.valid then
       local control = entry.control
@@ -54,11 +56,10 @@ local function on_tick(event)
         if section and section.valid then
           local surface = entry.surface
           local position = entry.position
-          count = surface.get_pollution(position)
-          section.set_slot(1, {
-            value = POLLUTION_SIGNAL_NAME,
-            min = count,
-          })
+
+          slot_data.min = surface.get_pollution(position)
+
+          section.set_slot(1, slot_data)
         end
       end
     end
@@ -80,7 +81,7 @@ local function on_pre_entity_removed(event)
   end
 end
 
-local filters = {{filter="name", name=PC_ENTITY_NAME}}
+local filters = { { filter = "name", name = PC_ENTITY_NAME } }
 
 script.on_init(on_init)
 script.on_load(on_load)
