@@ -55,21 +55,10 @@ local function on_tick(event)
           local surface = entry.surface
           local position = entry.position
           count = surface.get_pollution(position)
-          
-          -- control.set_signal(1, signal)
           section.set_slot(1, {
-            value = {
-              comparator = "=",
-              quality = "normal",
-              type = "virtual",
-              name = POLLUTION_SIGNAL_NAME,
-            },
+            value = POLLUTION_SIGNAL_NAME,
             min = count,
           })
-
-          for i=2, section.filters_count do
-            section.clear_slot(i)
-          end        
         end
       end
     end
